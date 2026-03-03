@@ -1,0 +1,36 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag or branch (e.g. v0.1.3)"
+        required: true
+        default: "main"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # needed to create releases in this public repo
+
+    steps:
+      - name: Checkout private source
+        uses: actions/checkout@v4
+        with:
+          repository: griddynamics/cto-rnd-gain-mcp
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.PRIVATE_REPO_PAT }}
+
+      - uses: astral-sh/setup-uv@v5
+
+      - run: uv build
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # automatic, no setup needed
+        run: |
+          gh release create ${{ inputs.ref }} dist/* \
+            --repo awrobel-gd/gain-estimation-mcp-releases \
+            --title "${{ inputs.ref }}" \
+            --notes "Built from internal source"
