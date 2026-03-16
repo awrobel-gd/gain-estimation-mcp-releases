@@ -42,12 +42,12 @@ jobs:
           for f in dist/*.whl dist/*.tar.gz; do
             [ -e "$f" ] || continue
             base=$(basename "$f")
-            # Replace only version numbers (e.g. -0.2.0), keep -py3-none-any etc.
-            stable=$(echo "$base" | sed -E 's/-[0-9]+\.[0-9]+\.[0-9]+/-latest/')
+            # Replace version with 0.2 for stable URL (PEP 440 valid)
+            stable=$(echo "$base" | sed -E 's/-[0-9]+\.[0-9]+\.[0-9]+/-0.2/')
             cp "$f" "dist/$stable"
           done
           gh release delete latest --repo awrobel-gd/gain-estimation-mcp-releases --yes --cleanup-tag 2>/dev/null || true
-          LATEST_ASSETS=$(ls dist/*latest* 2>/dev/null) && \
+          LATEST_ASSETS=$(ls dist/*0.2*.whl dist/*0.2*.tar.gz 2>/dev/null) && \
           gh release create latest $LATEST_ASSETS \
             --repo awrobel-gd/gain-estimation-mcp-releases \
             --title "Latest" \
