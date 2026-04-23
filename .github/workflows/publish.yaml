@@ -24,7 +24,7 @@ jobs:
 
       - uses: astral-sh/setup-uv@v5
 
-      - run: uv build --directory mcp_server --out-dir dist
+      - run: cd mcp_server && uv build --out-dir ../dist
 
       - name: Create GitHub Release
         env:
