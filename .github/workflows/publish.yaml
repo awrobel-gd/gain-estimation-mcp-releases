@@ -18,7 +18,7 @@ jobs:
       - name: Checkout private source
         uses: actions/checkout@v4
         with:
-          repository: griddynamics/cto-rnd-gain-mcp
+          repository: griddynamics/gd-specflow
           ref: ${{ inputs.ref }}
           token: ${{ secrets.PRIVATE_REPO_PAT }}
 
